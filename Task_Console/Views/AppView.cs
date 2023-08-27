@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Task_Console.Utilities;
+using Task_Console.Controllers;
 
 namespace Task_Console.Views
 {
@@ -13,39 +15,35 @@ namespace Task_Console.Views
             Console.WriteLine("2. Login user");
             Console.WriteLine("3. Exit");
             Console.WriteLine("Enter your choice");
-            await GetUserInput();
-        }
+            string option = GetUserInput();
 
-        public static async Task RoutUserInit(string Option )
-        {
-            switch (Option)
+            if (int.TryParse(option, out int choice))
             {
-                case "1":
-                    await RegisterUser();
-                    break;
-                case "2":
-                    await LoginUser();
-                    break;
-                case "3":
-                    await ExitApp();
-                    break;
-                default:
-                    await ShowMessage("Invalid option");
+                if (Utility.ValidateRange(choice, 1, 3))
+                {
+                    await UserController.UserBaseRouter(option);
+                }
+                else
+                {
+                    AppView.ShowMessage("Invalid choice. Please enter a number between 1 and 3.");
                     await InitApp();
-                    break;
+                }
+            }
+            else
+            {
+                AppView.ShowMessage("Invalid input. Please enter a valid number.");
+                await InitApp();
             }
         }
-
-        public static async Task ShowMessage(string message)
+        
+        public static void ShowMessage(string message)
         {
             Console.WriteLine(message);
         }
-
-
         //  get user input
-        public static async Task<string> GetUserInput()
+        public static string GetUserInput()
         {
-            return Console.ReadLine();
+            return  Console.ReadLine();
         }
     }
 }
