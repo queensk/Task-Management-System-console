@@ -13,19 +13,32 @@ namespace Task_Console.Views
         {
             Console.WriteLine("1. Register user");
             Console.WriteLine("2. Login user");
-            Console.WriteLine("3. Exit");
+            Console.WriteLine("3. Admin login");
+            Console.WriteLine("4. Register admin"); // Add admin registration option
+            Console.WriteLine("5. Exit");
             Console.WriteLine("Enter your choice");
             string option = GetUserInput();
 
             if (int.TryParse(option, out int choice))
             {
-                if (Utility.ValidateRange(choice, 1, 3))
+                if (Utility.ValidateRange(choice, 1, 5))
                 {
-                    await UserController.UserBaseRouter(option);
+                    if (choice == 3)
+                    {
+                        await AdminController.AdminBaseRouter(choice);
+                    }
+                    else if (choice == 4) // Handle admin registration option
+                    {
+                        await AdminController.AdminBaseRouter(choice);
+                    }
+                    else
+                    {
+                        await UserController.UserBaseRouter(option);
+                    }
                 }
                 else
                 {
-                    AppView.ShowMessage("Invalid choice. Please enter a number between 1 and 3.");
+                    AppView.ShowMessage("Invalid choice. Please enter a number between 1 and 5.");
                     await InitApp();
                 }
             }
@@ -35,6 +48,7 @@ namespace Task_Console.Views
                 await InitApp();
             }
         }
+
         
         public static void ShowMessage(string message)
         {
