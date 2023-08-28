@@ -14,6 +14,8 @@ namespace Task_Console.Controllers
         private static readonly AdminService _adminService = new AdminService();
         private static ProjectService _projectService;
         private static readonly TaskService _taskService = new TaskService();
+        private static readonly UserService _userService = new UserService();
+
         private static Admin loginAdmin;
         // private static bool isInitialAdminCreated = false;
 
@@ -38,51 +40,52 @@ namespace Task_Console.Controllers
         }
 
         public static async Task RegisterAdmin()
-{
-    Tuple<string, string> userInput = await AdminView.RegisterAdminView();
-    string Username = userInput.Item1;
-    string Password = userInput.Item2;
+        {
+            Tuple<string, string> userInput = await AdminView.RegisterAdminView();
+            string Username = userInput.Item1;
+            string Password = userInput.Item2;
 
-    Admin newAdmin = new Admin
-    {
-        Username = Username,
-        Password = Utility.EncodePassword(Password)
-    };
+            Admin newAdmin = new Admin
+            {
+                Username = Username,
+                Password = Utility.EncodePassword(Password)
+            };
 
-    if (_adminService.RegisterAdmin(newAdmin))
-    {
-        AppView.ShowMessage("Admin registered successfully!");
-        loginAdmin = newAdmin; // Automatically log in the registered admin
-        await ShowAdminMenuGetOption(loginAdmin.Id);
-    }
-    else
-    {
-        AppView.ShowMessage("Error registering admin.");
-    }
-}
+            if (_adminService.RegisterAdmin(newAdmin))
+            {
+                AppView.ShowMessage("Admin registered successfully!");
+                loginAdmin = newAdmin; // Automatically log in the registered admin
+                await ShowAdminMenuGetOption(loginAdmin.Id);
+            }
+            else
+            {
+                AppView.ShowMessage("Error registering admin.");
+            }
+        }
 
 
 
-        private static bool isInitialAdminCreated = false;
+        // private static bool isInitialAdminCreated = false;
 
         public static async Task AdminLogin()
-{
-    Tuple<string, string> userInput = await AdminView.AdminLoginView();
-    string Username = userInput.Item1;
-    string Password = userInput.Item2;
+        {
+            Tuple<string, string> userInput = await AdminView.AdminLoginView();
+            string Username = userInput.Item1;
+            string Password = userInput.Item2;
 
-    Admin admin = _adminService.LoginAdmin(Username, Password);
-    if (admin != null)
-    {
-        loginAdmin = admin;
-        await ShowAdminMenuGetOption(loginAdmin.Id); // Show admin menu after successful login
-    }
-    else
-    {
-        AppView.ShowMessage("Invalid username or password");
-        await AppView.InitApp();
-    }
-}
+            Admin admin = _adminService.LoginAdmin(Username, Password);
+            if (admin != null)
+            {
+                loginAdmin = admin;
+                _projectService = new ProjectService(loginAdmin);
+                await ShowAdminMenuGetOption(loginAdmin.Id); // Show admin menu after successful login
+            }
+            else
+            {
+                AppView.ShowMessage("Invalid username or password");
+                await AppView.InitApp();
+            }
+        }
 
 
         public static async Task ShowAdminMenuGetOption(int adminId)
@@ -199,6 +202,8 @@ namespace Task_Console.Controllers
         public static async Task CreateTask()
         {
             List<Project> projects = _projectService.GetAllProjects();
+            List<User> users = _userService.GetAllUsers(); // Get all users from the service
+
             if (projects.Count == 0)
             {
                 AppView.ShowMessage("No projects available to create task under.");
@@ -210,6 +215,8 @@ namespace Task_Console.Controllers
             string taskDescription = userInput.Item2;
             bool isCompleted = userInput.Item3;
 
+            int userId = await AdminView.SelectUserForTask(users); // Ensure a valid user is selected
+
             Project project = projects.FirstOrDefault(p => p.Id == projectId);
             if (project != null)
             {
@@ -217,6 +224,7 @@ namespace Task_Console.Controllers
                 {
                     Description = taskDescription,
                     IsCompleted = isCompleted,
+                    UserId = userId, // Assign the selected user to the task
                     ProjectId = projectId
                 };
 

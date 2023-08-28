@@ -36,23 +36,23 @@ namespace Task_Console.Views
         }
 
         public static async Task<Tuple<string, string>> AdminLoginView()
-{
-    Console.WriteLine("Enter Admin Login Details");
-    Console.WriteLine("Enter admin username:");
-    string username = Console.ReadLine();
-    Console.WriteLine("Enter admin password:");
-    string password = Console.ReadLine();
+        {
+            Console.WriteLine("Enter Admin Login Details");
+            Console.WriteLine("Enter admin username:");
+            string username = Console.ReadLine();
+            Console.WriteLine("Enter admin password:");
+            string password = Console.ReadLine();
 
-    if (Utility.ValidateStringInput(username, password))
-    {
-        return Tuple.Create(username, password);
-    }
-    else
-    {
-        AppView.ShowMessage("Invalid input. Please try again.");
-        throw new ArgumentException("Invalid input.");
-    }
-}
+            if (Utility.ValidateStringInput(username, password))
+            {
+                return Tuple.Create(username, password);
+            }
+            else
+            {
+                AppView.ShowMessage("Invalid input. Please try again.");
+                throw new ArgumentException("Invalid input.");
+            }
+        }
 
 
         // public static async Task<Admin> CreateInitialAdminView()
@@ -283,6 +283,24 @@ namespace Task_Console.Views
             }
         }
 
+        public static async Task<int> SelectUserForTask(List<User> users)
+        {
+            Console.WriteLine("Select a user for the task:");
+
+            foreach (var user in users)
+            {
+                Console.WriteLine($"ID: {user.Id}, Username: {user.Username}");
+            }
+
+            int selectedUserId;
+            do
+            {
+                Console.Write("Enter the ID of the user: ");
+            }
+            while (!int.TryParse(Console.ReadLine(), out selectedUserId) || users.All(user => user.Id != selectedUserId));
+
+            return selectedUserId;
+        }
 
         public static async Task<int> SelectTaskToUpdate(List<ProjectTask> tasks)
         {
