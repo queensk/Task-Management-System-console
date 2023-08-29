@@ -39,11 +39,11 @@ namespace Task_Console.Model
                 Console.WriteLine($"User {Username} has the following undone tasks:");
                 Console.WriteLine("ID\tProject\t\tDescription");
 
-                foreach (var task in Tasks)
+                foreach (ProjectTask task in Tasks)
                 {
                     if (!task.IsCompleted)
                     {
-                        Console.WriteLine($"{task.Id}\t{task.Project.Name}\t\t{task.Description}");
+                        task.printTask();
                     }
                 }
             }

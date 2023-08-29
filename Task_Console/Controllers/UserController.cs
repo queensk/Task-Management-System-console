@@ -104,6 +104,7 @@ namespace Task_Console.Controllers
         {
             List<Project> userProjects = _userService.GetUserProjects();
             await UserView.ShowUserProject(userProjects);
+             await ShowUserMenuGetOption();
         }
 
         public static async Task ShowUserSingleProjectRoute()
@@ -132,12 +133,37 @@ namespace Task_Console.Controllers
         public static async Task ShowUserUndoneTasksRoute()
         {
             User user = _userService.GetLoginUser();
-            if (user.Tasks.Count > 0)
+            Console.WriteLine(user.Tasks.Count);
+            if (user.Tasks.Count > 0){
                 user.PrintUserUndoneTasks();
+               string userInput = await UserView.CheckTaskDone();
+                if (int.TryParse(userInput, out int taskId) && 
+                    user.Tasks.Any(task => task.Id == taskId))
+                {
+                    ProjectTask selectedTask = user.Tasks.FirstOrDefault(task => task.Id == taskId);
+                    selectedTask.IsCompleted = true;
+                    if (selectedTask != null){
+                        ProjectTask userTask = _userService.UpdateTask(selectedTask);
+                        if (userTask.IsCompleted == true){
+                            AppView.ShowMessage($"Task {userTask.Id} is done.");
+                        await ShowUserMenuGetOption();
+                        }
+                    }
+                    else {
+                        AppView.ShowMessage("Invalid task ID. Please try again.");
+                        await ShowUserUndoneTasksRoute();
+                    }
+                }
+                else
+                {
+                    AppView.ShowMessage("Invalid task ID. Please try again.");
+                    await ShowUserUndoneTasksRoute();
+                }
+            }
             else
             {
                 AppView.ShowMessage("There are no undone tasks");
-                ShowUserMenuGetOption();
+                await ShowUserMenuGetOption();
             }
 
         }
@@ -155,8 +181,9 @@ namespace Task_Console.Controllers
             if (int.TryParse(taskIdInput, out int taskId) && 
                 userTasks.Any(task => task.Id == taskId))
             {
-                List<ProjectTask> selectedTask = _userService.GetUserTasks(taskId);
+                List<ProjectTask> selectedTask = userTasks.Where(task => task.Id == taskId).ToList();
                 await UserView.ShowUserTasksView(selectedTask);
+                await ShowUserMenuGetOption();
             }
             else
             {

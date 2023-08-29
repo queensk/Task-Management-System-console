@@ -10,20 +10,29 @@ namespace Task_Console.Views
 {
     public class UserView
     {
-         public static async Task<Tuple<string, string>> LoginUserView()
+        private static string white = "\u001b[37m";
+        private static string blue = "\u001b[34m";
+        private static string green = "\u001b[32m";
+        private static string yellow = "\u001b[33m";
+        private static string magenta = "\u001b[35m";
+        private static string red = "\u001b[31m";
+        private static string resetColor = "\u001b[0m";
+        private static string lightBlue = "\u001b[36m";
+        private static string orange = "\u001b[38;5;208m";
+        public static async Task<Tuple<string, string>> LoginUserView()
         {
-            Console.WriteLine("Enter Your Login Details");
-            Console.WriteLine("Enter your username:");
+            Console.WriteLine($"{lightBlue}Enter Your Login Details{resetColor}");
+            Console.WriteLine($"{green}Enter your username:{resetColor}");
             string username =  AppView.GetUserInput();
-            Console.WriteLine("Enter your password:");
+            Console.WriteLine($"{green}Enter your password:{resetColor}");
             string password =  AppView.GetUserInput();
             if (Utility.ValidateStringInput(username, password))
             {
                 return Tuple.Create(username, password);
             }
             else{
-                AppView.ShowMessage("Invalid input. Please try again.");
-                throw new ArgumentException("Invalid input.");
+                AppView.ShowMessage($"{red}Invalid input. Please try again.{resetColor}");
+                throw new ArgumentException($"{red}Invalid input.{resetColor}");
             }
 
         }
@@ -31,10 +40,10 @@ namespace Task_Console.Views
         public static async Task<Tuple<string, string>> RegisterUserView()
         {
 
-            Console.WriteLine("Enter Your Registration Details");
-            Console.WriteLine("Enter your username:");
+            Console.WriteLine($"{orange}Enter Your Registration Details{resetColor}");
+            Console.WriteLine($"{green}Enter your username:{resetColor}");
             string username =  Console.ReadLine();
-            Console.WriteLine("Enter your password:");
+            Console.WriteLine($"{green}Enter your password:{resetColor}");
             string password =  Console.ReadLine();
             if (Utility.ValidateStringInput(username, password))
             {
@@ -42,7 +51,7 @@ namespace Task_Console.Views
             }
             else
             {
-                AppView.ShowMessage("Invalid input. Please try again.");
+                AppView.ShowMessage($"{red}Invalid input. Please try again.{resetColor}");
                 throw new ArgumentException("Invalid input.");
             }
         }
@@ -51,15 +60,15 @@ namespace Task_Console.Views
         {
             if (tasks.Count == 0)
             {
-                AppView.ShowMessage("You don't have any tasks.");
-                UserController.ShowUserMenuGetOption();
+                AppView.ShowMessage($"{yellow}You don't have any tasks.{resetColor}");
+                await UserController.ShowUserMenuGetOption();
             }
             else
             {
-                Console.WriteLine("Here are your tasks:");
+                Console.WriteLine($"{green}Here are your tasks:{resetColor}");
                 foreach (ProjectTask task in tasks)
                 {
-                    Console.WriteLine(task.ToString());
+                    task.printTask();
                 }
             }
         }
@@ -73,12 +82,12 @@ namespace Task_Console.Views
         {
             if (projects.Count == 0)
             {
-                AppView.ShowMessage("You don't have any projects.");
+                AppView.ShowMessage($"{red}You don't have any projects.{resetColor}");
                 UserController.ShowUserMenuGetOption();
             }
             else
             {
-                Console.WriteLine("Here are your projects:");
+                Console.WriteLine($"{yellow}Here are your projects:{resetColor}");
                 foreach (Project project in projects)
                 {
                     project.PrintProject();
@@ -88,7 +97,7 @@ namespace Task_Console.Views
 
         public static async Task ShowUserProjectView(List<Project> projects)
         {
-            Console.WriteLine("Here are your projects:");
+            Console.WriteLine($"{lightBlue}Here are your projects:{resetColor}");
             foreach (Project project in projects)
             {
                 project.PrintProject();
@@ -98,11 +107,11 @@ namespace Task_Console.Views
         public static async Task<string> ShowUserMenu()
         {
             Console.WriteLine("Welcome to the Task Manager");
-            Console.WriteLine("1 - Show Projects");
-            Console.WriteLine("2 - Show single Project");
-            Console.WriteLine("3 - Show Undone Tasks");
-            Console.WriteLine("4 - Show single Task");
-            Console.WriteLine("5 - Logout");
+            Console.WriteLine($"{blue}1{green} - Show Projects{resetColor}");
+            Console.WriteLine($"{blue}2{green} - Show single Project{resetColor}");
+            Console.WriteLine($"{blue}3{green} - Show Undone {resetColor}");
+            Console.WriteLine($"{blue}4{green} - Show single {resetColor}");
+            Console.WriteLine($"{blue}5{green} - Logout{resetColor}");
             string userInput = AppView.GetUserInput();
             if (int.TryParse(userInput, out int parsedInput) && Utility.ValidateRange(parsedInput, 1, 5))
             {
@@ -110,9 +119,16 @@ namespace Task_Console.Views
             }
             else
             {
-                AppView.ShowMessage("Invalid input. Please try again.");
+                AppView.ShowMessage($"{red}Invalid input. Please try again.{resetColor}");
                 return await ShowUserMenu();
             }
+        }
+
+        public static async Task<string> CheckTaskDone(){
+            Console.WriteLine($"{green}Mark Task as done{resetColor}");
+            Console.WriteLine($"{yellow}Enter Task ID{resetColor}");
+            string taskIdInput = AppView.GetUserInput();
+            return taskIdInput;
         }
     }
 }

@@ -10,6 +10,15 @@ namespace Task_Console.Views
 {
     public class AdminView
     {
+        private static string white = "\u001b[37m";
+        private static string blue = "\u001b[34m";
+        private static string green = "\u001b[32m";
+        private static string yellow = "\u001b[33m";
+        private static string magenta = "\u001b[35m";
+        private static string red = "\u001b[31m";
+        private static string resetColor = "\u001b[0m";
+        private static string lightBlue = "\u001b[36m";
+        private static string orange = "\u001b[38;5;208m";
 
         private static bool isInitialAdminCreated = false;
         private static string initialAdminUsername;
@@ -19,9 +28,9 @@ namespace Task_Console.Views
         public static async Task<Tuple<string, string>> RegisterAdminView()
         {
             Console.WriteLine("Enter Admin Registration Details");
-            Console.WriteLine("Enter admin username:");
+            Console.WriteLine($"{green}Enter admin username:{resetColor}");
             string username = Console.ReadLine();
-            Console.WriteLine("Enter admin password:");
+            Console.WriteLine($"{green}Enter admin password:{resetColor}");
             string password = Console.ReadLine();
 
             if (Utility.ValidateStringInput(username, password))
@@ -37,10 +46,10 @@ namespace Task_Console.Views
 
         public static async Task<Tuple<string, string>> AdminLoginView()
         {
-            Console.WriteLine("Enter Admin Login Details");
-            Console.WriteLine("Enter admin username:");
+            Console.WriteLine($"{orange}Enter Admin Login Details{resetColor}");
+            Console.WriteLine($"{green}Enter admin username:{resetColor}");
             string username = Console.ReadLine();
-            Console.WriteLine("Enter admin password:");
+            Console.WriteLine($"{green}Enter admin password:{resetColor}");
             string password = Console.ReadLine();
 
             if (Utility.ValidateStringInput(username, password))
@@ -49,7 +58,7 @@ namespace Task_Console.Views
             }
             else
             {
-                AppView.ShowMessage("Invalid input. Please try again.");
+                AppView.ShowMessage($"{red}Invalid input. Please try again.{resetColor}");
                 throw new ArgumentException("Invalid input.");
             }
         }
@@ -97,15 +106,15 @@ namespace Task_Console.Views
 
         public static async Task<string> ShowAdminMenu()
         {
-            Console.WriteLine("Admin Menu");
-            Console.WriteLine("1. Create Project");
-            Console.WriteLine("2. Update Project");
-            Console.WriteLine("3. Delete Project");
-            Console.WriteLine("4. Create Task");
-            Console.WriteLine("5. Update Task");
-            Console.WriteLine("6. Delete Task");
-            Console.WriteLine("7. Logout");
-            Console.WriteLine("Enter your choice:");
+            Console.WriteLine($"{red}Admin Menu{resetColor}");
+            Console.WriteLine($"{blue}1.{magenta} Create Project {resetColor}");
+            Console.WriteLine($"{blue}2.{magenta} Update Project{resetColor}");
+            Console.WriteLine($"{blue}3.{magenta} Delete Project{resetColor}");
+            Console.WriteLine($"{blue}4.{magenta} Create Task{resetColor}");
+            Console.WriteLine($"{blue}5.{magenta} Update Task{resetColor}");
+            Console.WriteLine($"{blue}6.{magenta} Delete Task{resetColor}");
+            Console.WriteLine($"{blue}7.{magenta} Logout{resetColor}");
+            Console.WriteLine($"{red}Enter your choice:{resetColor}");
             
             string userInput = GetUserInput();
             
@@ -115,14 +124,14 @@ namespace Task_Console.Views
             }
             else
             {
-                ShowMessage("Invalid input. Please enter a valid option.");
+                ShowMessage($"{red}Invalid input. Please enter a valid option.{resetColor}");
                 return await ShowAdminMenu();
             }
         }
 
         public static Project GetProjectInput()
         {
-            Console.WriteLine("Enter Project Name:");
+            Console.WriteLine($"{green}Enter Project Name:{resetColor}");
             string projectName = GetUserInput();
 
             return new Project { Name = projectName };
@@ -130,7 +139,7 @@ namespace Task_Console.Views
 
         public static void ShowProjectList(List<Project> projects)
         {
-            Console.WriteLine("Available Projects:");
+            Console.WriteLine($"{red}Available Projects:{resetColor}");
             foreach (var project in projects)
             {
                 Console.WriteLine($"{project.Id}. {project.Name}");
@@ -139,7 +148,7 @@ namespace Task_Console.Views
 
         public static int GetProjectIdInput()
         {
-            Console.WriteLine("Enter Project ID:");
+            Console.WriteLine($"{green}Enter Project ID:{resetColor}");
             string projectIdInput = GetUserInput();
 
             if (int.TryParse(projectIdInput, out int projectId))
@@ -148,14 +157,14 @@ namespace Task_Console.Views
             }
             else
             {
-                ShowMessage("Invalid input. Please enter a valid Project ID.");
+                ShowMessage($"{red}Invalid input. Please enter a valid Project ID.{resetColor}");
                 return GetProjectIdInput();
             }
         }
 
         public static ProjectTask GetTaskInput()
         {
-            Console.WriteLine("Enter Task Description:");
+            Console.WriteLine($"{green}Enter Task Description:{resetColor}");
             string taskDescription = GetUserInput();
 
             return new ProjectTask { Description = taskDescription };
@@ -163,7 +172,7 @@ namespace Task_Console.Views
 
         public static int GetTaskIdInput()
         {
-            Console.WriteLine("Enter Task ID:");
+            Console.WriteLine($"{green}Enter Task ID:{resetColor}");
             string taskIdInput = GetUserInput();
 
             if (int.TryParse(taskIdInput, out int taskId))
@@ -172,14 +181,14 @@ namespace Task_Console.Views
             }
             else
             {
-                ShowMessage("Invalid input. Please enter a valid Task ID.");
+                ShowMessage($"{red}Invalid input. Please enter a valid Task ID.{resetColor}");
                 return GetTaskIdInput();
             }
         }
 
         public static async Task<Project> CreateProjectView()
         {
-            Console.WriteLine("Enter project name:");
+            Console.WriteLine($"{green}Enter project name:{resetColor}");
             string projectName = GetUserInput();
 
             return new Project
@@ -190,7 +199,7 @@ namespace Task_Console.Views
 
         public static async Task<Project> SelectProjectToUpdate(List<Project> projects)
         {
-            Console.WriteLine("Select a project to update:");
+            Console.WriteLine($"{green}Select a project to update:{resetColor}");
             ShowProjectList(projects);
 
             string projectIdInput = GetUserInput();
@@ -203,13 +212,13 @@ namespace Task_Console.Views
                 }
                 else
                 {
-                    ShowMessage("Invalid project ID.");
+                    ShowMessage($"{red}Invalid project ID.{resetColor}");
                     return await SelectProjectToUpdate(projects);
                 }
             }
             else
             {
-                ShowMessage("Invalid input. Please enter a valid Project ID.");
+                ShowMessage($"{red}Invalid input. Please enter a valid Project ID.{resetColor}");
                 return await SelectProjectToUpdate(projects);
             }
         }
@@ -217,8 +226,8 @@ namespace Task_Console.Views
 
         public static async Task<Project> UpdateProjectView(Project project)
         {
-            Console.WriteLine($"Updating project: {project.Name}");
-            Console.WriteLine("Enter new project name:");
+            Console.WriteLine($"{orange}Updating project: {project.Name}{resetColor}");
+            Console.WriteLine($"{green}Enter new project name:{resetColor}");
             string newProjectName = GetUserInput();
 
             project.Name = newProjectName;
@@ -227,7 +236,7 @@ namespace Task_Console.Views
 
         public static async Task<Project> SelectProjectToDelete(List<Project> projects)
         {
-            Console.WriteLine("Select a project to delete:");
+            Console.WriteLine($"{green}Select a project to delete:{resetColor}");
             ShowProjectList(projects);
 
             string projectIdInput = GetUserInput();
@@ -240,20 +249,20 @@ namespace Task_Console.Views
                 }
                 else
                 {
-                    ShowMessage("Invalid project ID.");
+                    ShowMessage($"{red}Invalid project ID.{resetColor}");
                     return await SelectProjectToDelete(projects);
                 }
             }
             else
             {
-                ShowMessage("Invalid input. Please enter a valid Project ID.");
+                ShowMessage($"{red}Invalid input. Please enter a valid Project ID.{resetColor}");
                 return await SelectProjectToDelete(projects);
             }
         }
 
         public static async Task<Tuple<int, string, bool>> CreateTaskView()
         {
-            Console.WriteLine("Enter task description:");
+            Console.WriteLine($"{green}Enter task description:{resetColor}");
             string description = GetUserInput();
 
             // Get other inputs (int projectId and bool isCompleted)
@@ -265,7 +274,7 @@ namespace Task_Console.Views
 
         private static bool GetIsCompletedInput()
         {
-            Console.WriteLine("Is the task completed? (yes/no):");
+            Console.WriteLine($"{orange}Is the task completed? ({green}yes{resetColor}/{red}no{orange}):{resetColor}");
             string input = GetUserInput();
 
             if (input.ToLower() == "yes")
@@ -278,24 +287,24 @@ namespace Task_Console.Views
             }
             else
             {
-                ShowMessage("Invalid input. Please enter 'yes' or 'no'.");
+                ShowMessage($"{red}Invalid input. Please enter {green}'yes'{red} or {orange}'no'{red}.{resetColor}");
                 return GetIsCompletedInput();
             }
         }
 
         public static async Task<int> SelectUserForTask(List<User> users)
         {
-            Console.WriteLine("Select a user for the task:");
+            Console.WriteLine($"{green}Select a user for the task:{resetColor}");
 
             foreach (var user in users)
             {
-                Console.WriteLine($"ID: {user.Id}, Username: {user.Username}");
+                Console.WriteLine($"{orange}ID: {user.Id}, Username: {user.Username}{resetColor}");
             }
 
             int selectedUserId;
             do
             {
-                Console.Write("Enter the ID of the user: ");
+                Console.Write($"{blue}Enter the ID of the user: {resetColor}");
             }
             while (!int.TryParse(Console.ReadLine(), out selectedUserId) || users.All(user => user.Id != selectedUserId));
 
@@ -304,7 +313,7 @@ namespace Task_Console.Views
 
         public static async Task<int> SelectTaskToUpdate(List<ProjectTask> tasks)
         {
-            Console.WriteLine("Select a task to update:");
+            Console.WriteLine($"{green}Select a task to update:{resetColor}");
             ShowTaskList(tasks);
 
             string taskIdInput = await GetUserInputAsync();
@@ -314,7 +323,7 @@ namespace Task_Console.Views
             }
             else
             {
-                ShowMessage("Invalid task ID.");
+                ShowMessage($"{red}Invalid task ID.{resetColor}");
                 return await SelectTaskToUpdate(tasks);
             }
         }
@@ -327,11 +336,11 @@ namespace Task_Console.Views
 
         public static async Task<Tuple<string, bool>> UpdateTaskView(ProjectTask task)
         {
-            Console.WriteLine($"Updating task: {task.Description}");
-            Console.WriteLine("Enter new task description:");
+            Console.WriteLine($"{green}Updating task: {task.Description}{resetColor}");
+            Console.WriteLine($"{orange}Enter new task description:{resetColor}");
             string newDescription = GetUserInput();
 
-            Console.WriteLine("Enter true if the task is completed, otherwise enter false:");
+            Console.WriteLine($"{orange}Enter {yellow}true{orange} if the task is completed, otherwise enter {red}false{orange}:{resetColor}");
             string isCompletedInput = GetUserInput();
             bool newIsCompleted;
             if (bool.TryParse(isCompletedInput, out newIsCompleted))
@@ -340,7 +349,7 @@ namespace Task_Console.Views
             }
             else
             {
-                ShowMessage("Invalid input. Please enter true or false.");
+                ShowMessage($"{red}Invalid input. Please enter true or false.{resetColor}");
                 return await UpdateTaskView(task);
             }
         }
@@ -348,7 +357,7 @@ namespace Task_Console.Views
 
         public static async Task<ProjectTask> SelectTaskToDelete(List<ProjectTask> tasks)
         {
-            Console.WriteLine("Select a task to delete:");
+            Console.WriteLine($"{green}Select a task to delete:{resetColor}");
             ShowTaskList(tasks);
 
             string taskIdInput = GetUserInput();
@@ -361,13 +370,13 @@ namespace Task_Console.Views
                 }
                 else
                 {
-                    ShowMessage("Invalid task ID.");
+                    ShowMessage($"{red}Invalid task ID.{resetColor}");
                     return await SelectTaskToDelete(tasks);
                 }
             }
             else
             {
-                ShowMessage("Invalid input. Please enter a valid Task ID.");
+                ShowMessage($"{red}Invalid input. Please enter a valid Task ID.{resetColor}");
                 return await SelectTaskToDelete(tasks);
             }
         }
@@ -375,10 +384,10 @@ namespace Task_Console.Views
 
         private static void ShowTaskList(List<ProjectTask> tasks)
         {
-            Console.WriteLine("Available Tasks:");
+            Console.WriteLine($"{green}Available Tasks:{resetColor}");
             foreach (var task in tasks)
             {
-                Console.WriteLine($"{task.Id}. {task.Description}");
+                Console.WriteLine($"{orange}{task.Id}. {lightBlue}{task.Description}{resetColor}");
             }
         }
 
