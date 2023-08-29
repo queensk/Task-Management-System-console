@@ -23,7 +23,7 @@ namespace Task_Console.Controllers
                 case "2":
                     await LoginUser();
                     break;
-                case "3":
+                case "4":
                     await ExitApp();
                     break;
                 default:
@@ -42,7 +42,7 @@ namespace Task_Console.Controllers
             };
             if(_userService.RegisterUser(newUser))
             {
-                await UserView.LoginUserView();
+                await LoginUser();
             }
             else{
                 await AppView.InitApp();

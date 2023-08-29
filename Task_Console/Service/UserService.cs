@@ -22,6 +22,11 @@ namespace Task_Console.Service
             _context = new AppDb();
         }
 
+        public List<User> GetAllUsers()
+        {
+            return _context.users.ToList();
+        }
+
         public bool RegisterUser(User user)
         {
             try
