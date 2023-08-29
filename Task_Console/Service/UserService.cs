@@ -112,6 +112,26 @@ namespace Task_Console.Service
             return project;
         }
 
+        public ProjectTask SetTaskDone(int taskId)
+        {
+            var task = _context.tasks.FirstOrDefault(t => t.Id == taskId);
+            ProjectTask projectTask = new ProjectTask
+            {
+                Id = task.Id,
+                Description = task.Description,
+                IsCompleted = true,
+                UserId = task.UserId,
+                ProjectId = task.ProjectId
+            };
+            _context.SaveChanges();
+            return projectTask;
+        }
+        public ProjectTask UpdateTask(ProjectTask task)
+        {
+            _context.tasks.Update(task);
+            _context.SaveChanges();
+            return task;
+        }
         public User GetLoginUser()
         {
             return loginUser;

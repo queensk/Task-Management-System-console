@@ -9,14 +9,24 @@ namespace Task_Console.Views
 {
     public class AppView
     {
+        private static string white = "\u001b[37m";
+        private static string blue = "\u001b[34m";
+        private static string green = "\u001b[32m";
+        private static string yellow = "\u001b[33m";
+        private static string magenta = "\u001b[35m";
+        private static string red = "\u001b[31m";
+        private static string resetColor = "\u001b[0m";
+        private static string lightBlue = "\u001b[36m";
+        private static string orange = "\u001b[38;5;208m";
         public static async Task InitApp()
         {
-            Console.WriteLine("1. Register user");
-            Console.WriteLine("2. Login user");
-            Console.WriteLine("3. Admin login");
-            Console.WriteLine("4. Register admin"); // Add admin registration option
-            Console.WriteLine("5. Exit");
-            Console.WriteLine("Enter your choice");
+            Console.Clear();
+            Console.WriteLine($"{blue}1.{yellow} Register user{resetColor}");
+            Console.WriteLine($"{blue}2.{yellow} Login user{resetColor}");
+            Console.WriteLine($"{blue}3.{yellow} Admin login{resetColor}");
+            Console.WriteLine($"{blue}4.{yellow} Register admin{resetColor}"); // Add admin registration option
+            Console.WriteLine($"{blue}5.{yellow} Exit{resetColor}");
+            Console.WriteLine($"{green}Enter your choice{resetColor}");
             string option = GetUserInput();
 
             if (int.TryParse(option, out int choice))
@@ -38,13 +48,13 @@ namespace Task_Console.Views
                 }
                 else
                 {
-                    AppView.ShowMessage("Invalid choice. Please enter a number between 1 and 5.");
+                    AppView.ShowMessage($"{red}Invalid choice. Please enter a number between 1 and 5.{resetColor}");
                     await InitApp();
                 }
             }
             else
             {
-                AppView.ShowMessage("Invalid input. Please enter a valid number.");
+                AppView.ShowMessage($"{red}Invalid input. Please enter a valid number.{red}");
                 await InitApp();
             }
         }
