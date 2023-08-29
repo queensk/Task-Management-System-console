@@ -17,7 +17,6 @@ namespace Task_Console.Controllers
         private static readonly UserService _userService = new UserService();
 
         private static Admin loginAdmin;
-        // private static bool isInitialAdminCreated = false;
 
         public static async Task AdminBaseRouter(int option)
         {
@@ -63,9 +62,6 @@ namespace Task_Console.Controllers
             }
         }
 
-
-
-        // private static bool isInitialAdminCreated = false;
 
         public static async Task AdminLogin()
         {
